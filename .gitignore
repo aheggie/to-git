@@ -1,0 +1,4 @@
+/node_modules
+/scratch
+*.scratch
+*.code-workspace
