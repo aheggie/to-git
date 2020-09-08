@@ -11,6 +11,11 @@ program
   .command("init")
   .alias("i")
   .description("initialise to-git on a project (call at the root of a repo)")
-  .action(() => console.log("init"));
+  .action(() => {
+    // make async maybe
+    // promisify?
+    // check if already exists
+    fs.mkdirSync("./.to-git");
+  });
 
 program.parse(process.argv);
