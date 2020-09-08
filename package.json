@@ -1,6 +1,6 @@
 {
   "name": "to-git",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Simple product backlog manager with git hooks, in node",
   "main": "index.js",
   "scripts": {
@@ -12,5 +12,8 @@
     "agile"
   ],
   "author": "Georgia Alexandra Heggie",
-  "license": "UNLICENSED"
+  "license": "UNLICENSED",
+  "dependencies": {
+    "commander": "^6.1.0"
+  }
 }
