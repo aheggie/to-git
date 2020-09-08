@@ -33,11 +33,23 @@ program
       //not sure if this is really the best way to "touch" a new file with fs but it works and is non-destructive
       fs.appendFileSync(TODO_PATH, "");
       fs.appendFileSync(DOING_PATH, "");
+      console.log(`To-git initted in ${process.cwd()}`);
     } else {
       console.error("to-git filestructure already exists in this repo");
     }
   });
 
-// program.command("add").alias("+");
+program
+  .command("todo <message>")
+  .alias("t")
+  .description("Add a new future commit message to the to do list")
+  .action((message) => {
+    if (alreadyInitted()) {
+      fs.appendFileSync(TODO_PATH, `${message}\n`);
+      console.log(`new todo item: "${message}"`);
+    } else {
+      console.error("to-git filestructure not created yet");
+    }
+  });
 
 program.parse(process.argv);
