@@ -2,7 +2,11 @@
   "name": "to-git",
   "version": "0.0.1",
   "description": "Simple product backlog manager with git hooks, in node",
-  "main": "index.js",
+  "main": "./bin/index.js",
+  "preferGlobal": true,
+  "bin": {
+    "to-git": "./bin/index.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
