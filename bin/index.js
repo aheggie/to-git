@@ -12,10 +12,25 @@ program
   .alias("i")
   .description("initialise to-git on a project (call at the root of a repo)")
   .action(() => {
+    const DIRECTORY_PATH = "./.to-git";
+    const TODO_PATH = `${DIRECTORY_PATH}/todo`;
+    const DOING_PATH = `${DIRECTORY_PATH}/doing`;
+    // possible changes:
     // make async maybe
     // promisify?
+
     // check if already exists
-    fs.mkdirSync("./.to-git");
+    const notAlreadyInitted = !fs.existsSync(DIRECTORY_PATH);
+    if (notAlreadyInitted) {
+      //this errors if the directory already exists
+      fs.mkdirSync("./.to-git");
+      //this creates an empty file if the file doesnt exist and avoids overwriting anything if it doesn't exist
+      //not sure if this is really the best way to "touch" a new file with fs but it works and is non-destructive
+      fs.appendFileSync(TODO_PATH, "");
+      fs.appendFileSync(DOING_PATH, "");
+    } else {
+      console.error("to-git file structure already exists in this repo");
+    }
   });
 
 program.parse(process.argv);
