@@ -10,10 +10,26 @@ const TODO_PATH = `${DIRECTORY_PATH}/todo`;
 const DOING_PATH = `${DIRECTORY_PATH}/doing`;
 
 const alreadyInitted = () => fs.existsSync(DIRECTORY_PATH);
+const onlyRunIfInitted = (callback) => {
+  if (alreadyInitted) {
+    return callback();
+  } else {
+    console.error("to-git filestructure not created yet");
+  }
+};
+
+const splitLinesToArraySync = (filePath) =>
+  fs
+    .readFileSync(filePath, "utf8")
+    .split("\n")
+    //to remove last line usually, plus any other line that might not have an item
+    .filter((item) => item.length > 0);
+
+const lineNumToLetter = (num) => String.fromCharCode(65 + num);
 
 const program = new Command();
 
-program.version("0.0.1");
+program.version("0.0.1").name("to-git");
 
 program
   .command("init")
@@ -51,5 +67,31 @@ program
       console.error("to-git filestructure not created yet");
     }
   });
+
+program
+  .command("view <list>")
+  .alias("v")
+  .description(
+    "View the todo, doing, and done lists individually. Usage: to-git view [todo|doing|done]"
+  )
+  .action((list) =>
+    onlyRunIfInitted(() => {
+      if (list === "todo") {
+        splitLinesToArraySync(TODO_PATH).forEach((line, num) =>
+          console.log(num, line)
+        );
+      } else if (list === "doing") {
+        splitLinesToArraySync(DOING_PATH).forEach((line, num) => {
+          console.log(lineNumToLetter(num), line);
+        });
+      } else if (list === "done") {
+        console.log("view done not implemented yet");
+      } else {
+        console.error(
+          `Unknown command: view ${list}. Usage of view command: to-git view [todo|doing|done]`
+        );
+      }
+    })
+  );
 
 program.parse(process.argv);
