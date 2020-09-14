@@ -93,8 +93,8 @@ program
       indicatorInt = parseInt(number);
       if (tempNotNaNTest) {
         const todo_array = splitLinesToArraySync(TODO_PATH);
-        if (indicatorInt >= 0 && indicatorInt < todo_array.length) {
-          if (todo_array.length > 0) {
+        if (todo_array.length > 0) {
+          if (indicatorInt >= 0 && indicatorInt < todo_array.length) {
             const itemToMove = todo_array[indicatorInt];
             fs.appendFileSync(DOING_PATH, `${itemToMove}\n`);
             const new_todo_string = todo_array
@@ -104,14 +104,14 @@ program
               .join("\n");
             fs.writeFileSync(TODO_PATH, new_todo_string, "utf8");
           } else {
-            console.error("There are currently no items in the to-do list.");
+            console.error(
+              `Number '${indicatorInt}' does not indicate a current to-do list item. Please enter a number between 0 and ${
+                todo_array.length - 1
+              }`
+            );
           }
         } else {
-          console.error(
-            `Number '${indicatorInt}' does not indicate a current to-do list item. Please enter a number between 0 and ${
-              todo_array.length - 1
-            }`
-          );
+          console.error("There are currently no items in the to-do list.");
         }
       } else {
         console.error(
