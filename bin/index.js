@@ -80,4 +80,39 @@ program
     })
   );
 
+//this is to mock in behaviour till i learn how to test for NaN
+const tempNotNaNTest = true;
+program
+  .command("advance <number>")
+  .alias("a")
+  .description(
+    "advance an item from todo to doing, Usage: to-git advance [indicator number from to-do list]"
+  )
+  .action((number) =>
+    onlyRunIfInitted(DIRECTORY_PATH, () => {
+      indicatorInt = parseInt(number);
+      if (tempNotNaNTest) {
+        const todo_array = splitLinesToArraySync(TODO_PATH);
+        if (indicatorInt >= 0 && indicatorInt < todo_array.length) {
+          if (todo_array.length > 0) {
+            const itemToMove = todo_array[indicatorInt];
+            fs.appendFileSync(DOING_PATH, `${itemToMove}\n`);
+          } else {
+            console.error("There are currently no items in the to-do list.");
+          }
+        } else {
+          console.error(
+            `Number '${indicatorInt}' does not indicate a current to-do list item. Please enter a number between 0 and ${
+              todo_array.length - 1
+            }`
+          );
+        }
+      } else {
+        console.error(
+          `Non-integer argument: ${number}. Please enter an integer number indicating the to-do item you wish to advance to doing`
+        );
+      }
+    })
+  );
+
 program.parse(process.argv);
