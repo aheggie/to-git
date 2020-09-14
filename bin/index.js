@@ -97,6 +97,12 @@ program
           if (todo_array.length > 0) {
             const itemToMove = todo_array[indicatorInt];
             fs.appendFileSync(DOING_PATH, `${itemToMove}\n`);
+            const new_todo_string = todo_array
+              .filter((item) => item !== itemToMove)
+              //to replace the blank newline on the end of the file
+              .concat([""])
+              .join("\n");
+            fs.writeFileSync(TODO_PATH, new_todo_string, "utf8");
           } else {
             console.error("There are currently no items in the to-do list.");
           }
