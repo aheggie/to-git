@@ -2,30 +2,18 @@
 
 const { Command } = require("commander");
 const fs = require("fs");
+const {
+  alreadyInitted,
+  onlyRunIfInitted,
+  splitLinesToArraySync,
+  lineNumToLetter,
+} = require("../src/utilities");
 
 //these are paths used in all commands
 //node automatically sets them relative to process.cwd()
 const DIRECTORY_PATH = "./.to-git";
 const TODO_PATH = `${DIRECTORY_PATH}/todo`;
 const DOING_PATH = `${DIRECTORY_PATH}/doing`;
-
-const alreadyInitted = () => fs.existsSync(DIRECTORY_PATH);
-const onlyRunIfInitted = (callback) => {
-  if (alreadyInitted) {
-    return callback();
-  } else {
-    console.error("to-git filestructure not created yet");
-  }
-};
-
-const splitLinesToArraySync = (filePath) =>
-  fs
-    .readFileSync(filePath, "utf8")
-    .split("\n")
-    //to remove last line usually, plus any other line that might not have an item
-    .filter((item) => item.length > 0);
-
-const lineNumToLetter = (num) => String.fromCharCode(65 + num);
 
 const program = new Command();
 
@@ -42,7 +30,7 @@ program
     // search up directory tree to find root of repo where git is an ask to init there?
 
     // check if already exists
-    if (!alreadyInitted()) {
+    if (!alreadyInitted(DIRECTORY_PATH)) {
       //this errors if the directory already exists
       fs.mkdirSync("./.to-git");
       //this creates an empty file if the file doesnt exist and avoids overwriting anything if it doesn't exist
@@ -60,7 +48,7 @@ program
   .alias("t")
   .description("Add a new future commit message to the to do list")
   .action((message) =>
-    onlyRunIfInitted(() => {
+    onlyRunIfInitted(DIRECTORY_PATH, () => {
       fs.appendFileSync(TODO_PATH, `${message}\n`);
       console.log(`new todo item: "${message}"`);
     })
@@ -73,7 +61,7 @@ program
     "View the todo, doing, and done lists individually. Usage: to-git view [todo|doing|done]"
   )
   .action((list) =>
-    onlyRunIfInitted(() => {
+    onlyRunIfInitted(DIRECTORY_PATH, () => {
       if (list === "todo") {
         splitLinesToArraySync(TODO_PATH).forEach((line, num) =>
           console.log(num, line)
