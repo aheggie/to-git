@@ -29,7 +29,7 @@ const lineNumToLetter = (num) => String.fromCharCode(65 + num);
 
 const program = new Command();
 
-program.version("0.0.1").name("to-git");
+program.version("0.0.3").name("to-git");
 
 program
   .command("init")
@@ -59,14 +59,12 @@ program
   .command("todo <message>")
   .alias("t")
   .description("Add a new future commit message to the to do list")
-  .action((message) => {
-    if (alreadyInitted()) {
+  .action((message) =>
+    onlyRunIfInitted(() => {
       fs.appendFileSync(TODO_PATH, `${message}\n`);
       console.log(`new todo item: "${message}"`);
-    } else {
-      console.error("to-git filestructure not created yet");
-    }
-  });
+    })
+  );
 
 program
   .command("view <list>")
